@@ -1,5 +1,5 @@
 const inquirer = require('inquirer');
-
+const express = require('express');
 
 const promptUser = () => {
   return inquirer.prompt([
@@ -15,3 +15,5 @@ const promptUser = () => {
 
 // run the app
 promptUser()
+
+module.exports = promptUser;
