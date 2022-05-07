@@ -12,7 +12,6 @@ const promptUser = () => {
 ])
 }
 
-
 // run the app
 promptUser()
 
