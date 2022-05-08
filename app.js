@@ -17,7 +17,7 @@ function initialPrompt() {
             "Add Employee",
             "Remove Employees",
             "Update Employee Role",
-            "Add Role",
+            "Add New Role",
             "End"
         ]
     }).then(function ({ initial }) {
@@ -43,14 +43,13 @@ function initialPrompt() {
                 break;
 
                 case "Add New Role":
-                addRole();
+                addNewRole();
                 break;
 
                 case "End":
                 db.end();
                 console.log("\nGoodbye!");
                 break;
-                
         }
     });
 };
@@ -285,51 +284,51 @@ function promptUpdate(updateEmployee, roles) {
 }
 
 // function to add role
-function addRole() {
+function addNewRole() {
     console.log('Adding Role\n');
 
-    const query = `SELECT * FROM departments`;
-
+    const query = `SELECT * FROM departments
+    `;
+    
     db.query(query, function (err, res) {
         if (err) { throw err; }
 
-        const departments = res.map(department => {
+        const departments = res.map(departments => {
             return {
-                name: department.dep_name,
-                value: department.id
+                name: departments.dep_name,
+                value: departments.id
             }
-        }
-    )
+        })
     console.table(res);
     console.log('Departments Available\n');
-    
-    promptAddRole(departments);
+ 
+    promptAddNewRole(departments);
     })
+
 }
 
 // function for prompting choices to add role
-function promptAddRole(departments) {
+function promptAddNewRole(departments) {
+    
     inquirer.prompt([
         {
             type: 'input',
             name: 'title',
-            message: "What is the role's title?"
+            message: "What is the title for the new role?"
         },
         {
             type: 'input',
             name: 'salary',
-            message: "What is the role's salary?"
+            message: "What is the role's salary? (Enter as a decimal EX: 100000.00)"
         },
         {
             type: 'list',
             name: 'departmentId',
             message: "What is the role's department?",
             choices: departments
-        }
-    ])
-    .then(function(answers) {
+        },
+    ]).then(function(answers) {
         console.table(answers);
-
         const query = `INSERT INTO roles (title, salary, department_id) VALUES (?, ?, ?)`;
         db.query(query, [answers.title, answers.salary, answers.departmentId], function (err, res) {
             if (err) { throw err; }
@@ -337,9 +336,9 @@ function promptAddRole(departments) {
             console.table(res);
             console.log(`${answers.title} added to database\n`);
 
-            initialPrompt(); 
+            initialPrompt();
         })
     })
-}
+};
 
 initialPrompt();
