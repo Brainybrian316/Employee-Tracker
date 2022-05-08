@@ -41,6 +41,11 @@ function initialPrompt() {
                 case "Update Employee Role":
                 updateEmployeeRole();
                 break;
+
+                case "Add New Role":
+                addRole();
+                break;
+
         }
     });
 };
@@ -273,6 +278,64 @@ function promptUpdate(updateEmployee, roles) {
         })
     })
 }
-    
+
+// function to add role
+function addRole() {
+    console.log('Adding Role\n');
+
+    const query = `SELECT * FROM departments`;
+
+    db.query(query, function (err, res) {
+        if (err) { throw err; }
+
+        const departmentChoices = res.map(department => {
+            return {
+                name: department.dep_name,
+                value: department.id
+            }
+        })
+
+        console.table(res);
+        console.log('Departments Available\n');
+
+        promptAddRole(departmentChoices);
+    });
+}
+
+// function for prompting choices to add role
+function promptAddRole(departmentChoices) {
+    inquirer.prompt([
+        {
+            type: 'input',
+            name: 'roleTitle',
+            message: "What is the role's title?"
+        },
+        {
+            type: 'input',
+            name: 'roleSalary',
+            message: "What will be the salary for this role? (Enter as a decimal EX: 100000.00)"
+        },
+        {
+            type: 'list',
+            name: 'departmentId',
+            message: "What department will this role be assigned to?",
+            choices: departments
+        }
+    ])
+    .then(function (answer) {
+        console.table(answer);
+
+        const query = `INSERT INTO roles (title, salary, department_id) VALUES (?, ?, ?)`;
+
+        db.query(query, [answer.roleTitle, answer.roleSalary, answer.departmentId], function (err, res) {
+            if (err) { throw err; }
+
+            console.table(res);
+            console.log(`${answer.roleTitle} added to database\n`);
+
+            initialPrompt();
+        });
+    });
+};
 
 initialPrompt()
