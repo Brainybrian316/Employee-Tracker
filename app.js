@@ -37,6 +37,10 @@ function initialPrompt() {
                 case "Remove Employees":
                 removeEmployee();
                 break;
+
+                case "Update Employee Role":
+                updateEmployeeRole();
+                break;
         }
     });
 };
@@ -193,6 +197,82 @@ function promptDelete(deleteEmployee) {
     })
 }
 
+// function for updating employee role
+function updateEmployeeRole() {
+    console.log('Updating Employee Role\n');
 
+    const query = `SELECT * FROM employees`;
+
+    db.query(query, function (err, res) {
+        if (err) { throw err; }
+
+        const updateEmployee = res.map(employee => {
+            return {
+                name: `${employee.first_name} ${employee.last_name}`,
+                value: employee.id
+            }
+        })
+        console.table(res);
+        console.log('Employees Available\n');
+
+        roleUpdate(updateEmployee);
+    })
+}
+
+// function for prompting choices to update employee role
+function roleUpdate(updateEmployee) {
+    console.log ('Updating Employee Role\n');
+
+    const query = `SELECT * FROM roles`;
+
+    db.query(query, function (err, res) {
+        if (err) { throw err; }
+
+        const roles = res.map(role => {
+            return {
+                name: role.title,
+                value: role.id,
+                salary: role.salary
+            }
+        })
+        console.table(res);
+        console.log('Roles Available\n');
+
+        promptUpdate(updateEmployee, roles);
+    })
+}
+
+// function for prompting choices to update employee role
+function promptUpdate(updateEmployee, roles) {
+    inquirer.prompt([
+        {
+            type: 'list',
+            name: 'employeeId',
+            message: "Which employee would you like to update?",
+            choices: updateEmployee
+        },
+        {
+            type: 'list',
+            name: 'roleId',
+            message: "What will the employee's new role be?",
+            choices: roles
+        },
+    ])
+    .then(function(answers) {
+        console.table(answers);
+
+        const query = `UPDATE employees SET role_id = ? WHERE id = ?`;
+
+        db.query(query, [answers.roleId, answers.employeeId], function (err, res) {
+            if (err) { throw err; }
+
+            console.table(res);
+            console.log(`Employee with the ID:${answers.employeeId} was updated to ${answers.roleId}`);
+
+            initialPrompt();
+        })
+    })
+}
+    
 
 initialPrompt()
