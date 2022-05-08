@@ -29,6 +29,10 @@ function initialPrompt() {
                 case "View Employees by Department":
                 viewEmployeeByDepartment();
                 break;
+
+                case "Add Employee":
+                addEmployee();
+                break;
         }
     });
 };
