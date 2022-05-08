@@ -511,7 +511,7 @@ function addNewDepartment() {
 }
 
     // function for prompting choices to add department
-    function promptAddNewDepartment(departments) {
+    function promptAddNewDepartment() {
         //  prompts user based on SQL departments table constructor/columns using the departments table as a reference
         inquirer.prompt([{
                 type: 'input',
