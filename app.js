@@ -86,12 +86,12 @@ function addEmployee() {
         console.table(res);
         console.log('Roles Available\n');
 
-        promptChoices(roles);
+        promptAdd(roles);
     })
 }
 
 // function for prompting choices to add employee
-function promptChoices(roles) {
+function promptAdd(roles) {
     inquirer.prompt([
         {
             type: 'input',
@@ -137,6 +137,61 @@ function promptChoices(roles) {
         })
     })
 };
+
+// function for removing employee
+function removeEmployee() {
+    console.log('Removing Employee\n');
+
+    const query = `SELECT * FROM employees`;
+
+    db.query(query, function (err, res) {
+        if (err) { throw err; }
+
+        const deleteEmployee = res.map(employee => {
+            return {
+                name: `${employee.first_name} ${employee.last_name}`,
+                value: employee.id
+            }
+    })
+
+    console.table(res);
+    console.log('Employees Available\n');
+
+    promptDelete(deleteEmployee);
+    })
+}
+
+// function for prompting choices to remove employee
+function promptDelete(deleteEmployee) {
+    inquirer.prompt([
+        {
+            type: 'list',
+            name:  'employeeId',
+            message: "Which employee would you like to delete? (WARNING: This will delete all associated data and cannot be undone)",
+            choices: deleteEmployee
+        },
+        {
+            type: 'confirm',
+            name: 'confirm',
+            message: "Are you sure you want to delete this employee?",
+            default: false
+        }
+    ])
+    .then(function(answers) {
+        console.table(answers);
+
+        const query = `DELETE FROM employees WHERE id = ?`;
+
+        db.query(query, [answers.employeeId], function (err, res) {
+            if (err) { throw err; }
+
+            console.table(res);
+            console.log(`Employee with the ID:${answers.employeeId} was removed from database\n`);
+
+            initialPrompt();
+    })
+    })
+}
 
 
 
