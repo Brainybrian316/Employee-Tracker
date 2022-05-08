@@ -19,8 +19,7 @@
 ## Demo of Project 
 
 ### 🏠 [Homepage](https://github.com/Brainybrian316/Employee-Tracker)
-### ✨ [Live Demo]()
-
+### ✨ [Live Demo](https://user-images.githubusercontent.com/99369106/167320912-c0d48f05-ce94-4a8a-9c44-5e5dd851dfdf.mp4)
 
 ***
 ## Install
