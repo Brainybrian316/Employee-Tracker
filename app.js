@@ -300,11 +300,13 @@ function promptDelete(deleteEmployee) {
                 type: 'confirm',
                 name: 'confirm',
                 message: "Are you sure you want to delete this employee?",
-                default: false
+                default: false 
             }
-        ])
-        .then(function (answers) {
-            // displays the answers to the user in the console
+        ]).then(function (answers) {
+            if (answers.confirm === false) {
+                // if the user does not confirm, runs the initialPrompt function
+                initialPrompt();
+            } else {     // displays the answers to the user in the console
             console.table(answers);
             // SQL query to delete the employee based on the user's answers
             const query = `DELETE FROM employees WHERE id = ?`;
@@ -314,7 +316,6 @@ function promptDelete(deleteEmployee) {
                 if (err) {
                     throw err;
                 }
-
                 // displays the response to the user as a table
                 console.table(res);
                 // displays the ID of the employee deleted
@@ -322,6 +323,7 @@ function promptDelete(deleteEmployee) {
                 // runs the initialPrompt function
                 initialPrompt();
             })
+        }
         })
 }
 
@@ -666,6 +668,5 @@ function promptRemoveRole(roles) {
         })
     })
 }
-
 
 initialPrompt();
