@@ -33,6 +33,10 @@ function initialPrompt() {
                 case "Add Employee":
                 addEmployee();
                 break;
+
+                case "Remove Employees":
+                removeEmployee();
+                break;
         }
     });
 };
