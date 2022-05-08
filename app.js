@@ -25,6 +25,10 @@ function initialPrompt() {
             case "View Employees":
                 viewEmployee();
                 break;
+
+                case "View Employees by Department":
+                viewEmployeeByDepartment();
+                break;
         }
     });
 };
@@ -33,10 +37,24 @@ function initialPrompt() {
 function viewEmployee() {
     console.log('Viewing Employees');
 
-    var query = `SELECT * FROM employees`;
+    const query = `SELECT * FROM employees`;
     db.query(query, function (err, res) {
         if (err) {  throw err;
         }
+        console.table(res);
+        initialPrompt();
+    })
+}
+
+// function for viewing employees by department
+function viewEmployeeByDepartment() {
+    console.log('Viewing Employees by Department');
+
+    const query = `SELECT * FROM employees LEFT JOIN roles ON employees.role_id = roles.id
+    LEFT JOIN departments ON roles.department_id = departments.id`;
+
+    db.query(query, function (err, res) {
+        if (err) { throw err; }
         console.table(res);
         initialPrompt();
     })
