@@ -20,6 +20,25 @@ function initialPrompt() {
             "Add Role",
             "End"
         ]
+    }).then(function ({ initial }) {
+        switch (initial) {
+            case "View Employees":
+                viewEmployee();
+                break;
+        }
+    });
+};
+
+// function for viewing employees
+function viewEmployee() {
+    console.log('Viewing Employees');
+
+    var query = `SELECT * FROM employees`;
+    db.query(query, function (err, res) {
+        if (err) {  throw err;
+        }
+        console.table(res);
+        initialPrompt();
     })
 }
 

@@ -11,8 +11,7 @@ const db = mysql.createConnection({
     // password
     password: process.env.DB_PASSWORD,
     // database name
-    database: 'employee_data'
-
+    database: "employee_data"
 },
 console.log('Connected to database')
 );
