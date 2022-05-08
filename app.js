@@ -112,8 +112,8 @@ function viewDepartments() {
         console.table(res);
         // runs the initialPrompt function
         initialPrompt();
-    })
-}
+    });
+};
 
 // function for viewing roles
 function viewRoles() {
@@ -129,8 +129,8 @@ function viewRoles() {
         console.table(res);
         // runs the initialPrompt function
         initialPrompt();
-    })
-}
+    });
+};
 
 // function for viewing employees
 function viewEmployee() {
@@ -148,8 +148,8 @@ function viewEmployee() {
         console.table(res);
         // runs the initialPrompt function
         initialPrompt();
-    })
-}
+    });
+};
 
 // function for viewing employees by department
 function viewEmployeeByDepartment() {
@@ -168,8 +168,8 @@ function viewEmployeeByDepartment() {
         console.table(res);
         // runs the initialPrompt function
         initialPrompt();
-    })
-}
+    });
+};
 
 // function for adding employee
 function addEmployee() {
@@ -191,7 +191,7 @@ function addEmployee() {
                 salary: role.salary,
                 value: role.id
             }
-        })
+        });
         // displays the roles to the user as a table
         console.table(res);
         // displays to the user the available roles
@@ -199,8 +199,8 @@ function addEmployee() {
 
         // runs the promptAdd function below
         promptAdd(roles);
-    })
-}
+    });
+};
 
 // function for prompting choices to add employee
 function promptAdd(roles) {
@@ -245,7 +245,6 @@ function promptAdd(roles) {
             if (err) {
                 throw err;
             }
-
             // displays the response to the user as a table
             console.table(res)
             // displays to the user name of the employee added
@@ -253,8 +252,8 @@ function promptAdd(roles) {
 
             // runs the initialPrompt function
             initialPrompt();
-        })
-    })
+        });
+    });
 };
 
 // function for removing employee
@@ -276,7 +275,7 @@ function removeEmployee() {
                 name: `${employee.first_name} ${employee.last_name}`,
                 value: employee.id
             }
-        })
+        });
         // displays the employees to the user as a table
         console.table(res);
         // displays to the user the available employees to remove based on ID
@@ -284,29 +283,29 @@ function removeEmployee() {
 
         // runs the promptRemove function below
         promptDelete(deleteEmployee);
-    })
-}
+    });
+};
 
 // function for prompting choices to remove employee
 function promptDelete(deleteEmployee) {
     // prompts user based on SQL employees table constructor/columns using the employeesID 
     inquirer.prompt([{
-                type: 'list',
-                name: 'employeeId',
-                message: "Which employee would you like to delete? (WARNING: This will delete all associated data and cannot be undone)",
-                choices: deleteEmployee
-            },
-            {
-                type: 'confirm',
-                name: 'confirm',
-                message: "Are you sure you want to delete this employee?",
-                default: false 
-            }
-        ]).then(function (answers) {
-            if (answers.confirm === false) {
-                // if the user does not confirm, runs the initialPrompt function
-                initialPrompt();
-            } else {     // displays the answers to the user in the console
+            type: 'list',
+            name: 'employeeId',
+            message: "Which employee would you like to delete? (WARNING: This will delete all associated data and cannot be undone)",
+            choices: deleteEmployee
+        },
+        {
+            type: 'confirm',
+            name: 'confirm',
+            message: "Are you sure you want to delete this employee?",
+            default: false
+        }
+    ]).then(function (answers) {
+        if (answers.confirm === false) {
+            // if the user does not confirm, runs the initialPrompt function
+            initialPrompt();
+        } else { // displays the answers to the user in the console
             console.table(answers);
             // SQL query to delete the employee based on the user's answers
             const query = `DELETE FROM employees WHERE id = ?`;
@@ -322,10 +321,10 @@ function promptDelete(deleteEmployee) {
                 console.log(`Employee with the ID:${answers.employeeId} was removed from database\n`);
                 // runs the initialPrompt function
                 initialPrompt();
-            })
-        }
-        })
-}
+            });
+        };
+    });
+};
 
 // function for updating employee role
 function updateEmployeeRole() {
@@ -346,15 +345,15 @@ function updateEmployeeRole() {
                 name: `${employee.first_name} ${employee.last_name}`,
                 value: employee.id
             }
-        })
+        });
         // displays the employees to the user as a table
         console.table(res);
         // displays to the user the available employees to update based on ID
         console.log('Employees Available\n');
         // runs the promptUpdate function below
         roleUpdate(updateEmployee);
-    })
-}
+    });
+};
 
 // function for prompting choices to update employee role
 function roleUpdate(updateEmployee) {
@@ -383,8 +382,8 @@ function roleUpdate(updateEmployee) {
         console.log('Roles Available\n');
         // runs the promptUpdate function below
         promptUpdate(updateEmployee, roles);
-    })
-}
+    });
+};
 
 // function for prompting choices to update employee role
 function promptUpdate(updateEmployee, roles) {
@@ -419,9 +418,9 @@ function promptUpdate(updateEmployee, roles) {
                 console.log(`Employee with the ID:${answers.employeeId} was updated to ${answers.roleId}`);
                 // runs the initialPrompt function
                 initialPrompt();
-            })
-        })
-}
+            });
+        });
+};
 
 // function to add role
 function addNewRole() {
@@ -443,15 +442,15 @@ function addNewRole() {
                 name: departments.dep_name,
                 value: departments.id
             }
-        })
+        });
         // displays the departments to the user as a table
         console.table(res);
         // displays to the user the available departments to add.
         console.log('Departments Available\n');
         // runs the promptAdd function below
         promptAddNewRole(departments);
-    })
-}
+    });
+};
 
 // function for prompting choices to add role
 function promptAddNewRole(departments) {
@@ -489,8 +488,8 @@ function promptAddNewRole(departments) {
             console.log(`${answers.title} added to database\n`);
             // runs the initialPrompt function
             initialPrompt();
-        })
-    })
+        });
+    });
 };
 
 // function to add department
@@ -513,15 +512,15 @@ function addNewDepartment() {
                 name: departments.dep_name,
                 value: departments.id
             }
-        })
+        });
         // displays the departments to the user as a table
         console.table(res);
         // displays to the user the available departments to add.
         console.log('Departments Available\n');
         // runs the promptAdd function below
         promptAddNewDepartment(departments);
-    })
-}
+    });
+};
 
 // function for prompting choices to add department
 function promptAddNewDepartment() {
@@ -547,9 +546,9 @@ function promptAddNewDepartment() {
             console.log(`${answers.department} added to database\n`);
             // runs the initialPrompt function
             initialPrompt();
-        })
-    })
-}
+        });
+    });
+};
 
 // function to remove a department
 function removeDepartment() {
@@ -571,15 +570,15 @@ function removeDepartment() {
                 name: departments.dep_name,
                 value: departments.id
             }
-        })
+        });
         // displays the departments to the user as a table
         console.table(res);
         // displays to the user the available departments to add.
         console.log('Departments Available\n');
         // runs the promptAdd function below
         promptRemoveDepartment(departments);
-    })
-}
+    });
+};
 
 // function for prompting choices to remove department by id
 function promptRemoveDepartment(departments) {
@@ -606,9 +605,9 @@ function promptRemoveDepartment(departments) {
             console.log(`${answers.departmentId} removed from database\n`);
             // runs the initialPrompt function
             initialPrompt();
-        })
-    })
-}
+        });
+    });
+};
 
 // function to remove a role
 function removeARole() {
@@ -630,15 +629,15 @@ function removeARole() {
                 name: roles.title,
                 value: roles.id
             }
-        })
+        });
         // displays the roles to the user as a table
         console.table(res);
         // displays to the user the available roles to add.
         console.log('Roles Available\n');
         // runs the promptAdd function below
         promptRemoveRole(roles);
-    })
-}
+    });
+};
 
 // function for prompting choices to remove role department_id
 function promptRemoveRole(roles) {
@@ -665,8 +664,8 @@ function promptRemoveRole(roles) {
             console.log(`${answers.roleId} removed from database\n`);
             // runs the initialPrompt function
             initialPrompt();
-        })
-    })
-}
+        });
+    });
+};
 
 initialPrompt();
