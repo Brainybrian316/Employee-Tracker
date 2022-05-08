@@ -21,6 +21,7 @@ function initialPrompt() {
             "Remove Employees",
             "Update Employee Role",
             "Add New Role",
+            "Add New Department",
             "End"
         ]
         // parameter for initialPrompt function is named above in the inquirer.prompt function
@@ -71,6 +72,12 @@ function initialPrompt() {
                 // function for adding new role
                 addNewRole();
                 break;
+
+            case "Add New Department":
+                // function for adding new department
+                addNewDepartment();
+                break;
+
                 // ends the program
             case "End":
                 db.end();
@@ -471,5 +478,65 @@ function promptAddNewRole(departments) {
         })
     })
 };
+
+// function to add department
+function addNewDepartment() {
+    // message to user \n provides a line break
+    console.log('Adding Department\n');
+    // SQL query to select all departments
+    const query = `SELECT * FROM departments
+    `;
+    // grabs the response from the query and runs it through the console.table function
+    db.query(query, function (err, res) {
+        // if there is an error, throw it
+        if (err) {
+            throw err;
+        }
+        // returns the response to the console.table function and .map will return an array of objects based on the data in the query
+        const departments = res.map(departments => {
+            return {
+                // SQL departments constructor (dep_name)
+                name: departments.dep_name,
+                value: departments.id
+            }
+        })
+        // displays the departments to the user as a table
+        console.table(res);
+        // displays to the user the available departments to add.
+        console.log('Departments Available\n');
+        // runs the promptAdd function below
+        promptAddNewDepartment(departments);
+    }
+    )
+}
+
+    // function for prompting choices to add department
+    function promptAddNewDepartment(departments) {
+        //  prompts user based on SQL departments table constructor/columns using the departments table as a reference
+        inquirer.prompt([{
+                type: 'input',
+                name: 'department',
+                message: "What is the name of the new department?"
+            }
+        ]).then(function (answers) {
+            // displays the answers to the user in the console
+            console.table(answers);
+            // SQL query to add the new department based on the user's answers
+            const query = `INSERT INTO departments (dep_name) VALUES (?)`;
+            // grabs the response from the query and runs it through to the console.table function
+            db.query(query, [answers.department], function (err, res) { // departments constructor (dep_name)
+                // if there is an error, throw it
+                if (err) {
+                    throw err;
+                }
+                // displays the response to the user as a table
+                console.table(res);
+                // displays the name of the department added
+                console.log(`${answers.department} added to database\n`);
+                // runs the initialPrompt function
+                initialPrompt();
+            })
+        })
+    }
 
 initialPrompt();
