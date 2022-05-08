@@ -22,6 +22,8 @@ function initialPrompt() {
             "Update Employee Role",
             "Add New Role",
             "Add New Department",
+            "Remove Department",
+            "Remove A Role",
             "End"
         ]
         // parameter for initialPrompt function is named above in the inquirer.prompt function
@@ -76,6 +78,16 @@ function initialPrompt() {
             case "Add New Department":
                 // function for adding new department
                 addNewDepartment();
+                break;
+
+            case "Remove Department":
+                // function for removing department
+                removeDepartment();
+                break;
+
+            case "Remove A Role":
+                // function for removing role
+                removeARole();
                 break;
 
                 // ends the program
@@ -506,37 +518,154 @@ function addNewDepartment() {
         console.log('Departments Available\n');
         // runs the promptAdd function below
         promptAddNewDepartment(departments);
-    }
-    )
+    })
 }
 
-    // function for prompting choices to add department
-    function promptAddNewDepartment() {
-        //  prompts user based on SQL departments table constructor/columns using the departments table as a reference
-        inquirer.prompt([{
-                type: 'input',
-                name: 'department',
-                message: "What is the name of the new department?"
+// function for prompting choices to add department
+function promptAddNewDepartment() {
+    //  prompts user based on SQL departments table constructor/columns using the departments table as a reference
+    inquirer.prompt([{
+        type: 'input',
+        name: 'department',
+        message: "What is the name of the new department?"
+    }]).then(function (answers) {
+        // displays the answers to the user in the console
+        console.table(answers);
+        // SQL query to add the new department based on the user's answers
+        const query = `INSERT INTO departments (dep_name) VALUES (?)`;
+        // grabs the response from the query and runs it through to the console.table function
+        db.query(query, [answers.department], function (err, res) { // departments constructor (dep_name)
+            // if there is an error, throw it
+            if (err) {
+                throw err;
             }
-        ]).then(function (answers) {
-            // displays the answers to the user in the console
-            console.table(answers);
-            // SQL query to add the new department based on the user's answers
-            const query = `INSERT INTO departments (dep_name) VALUES (?)`;
-            // grabs the response from the query and runs it through to the console.table function
-            db.query(query, [answers.department], function (err, res) { // departments constructor (dep_name)
-                // if there is an error, throw it
-                if (err) {
-                    throw err;
-                }
-                // displays the response to the user as a table
-                console.table(res);
-                // displays the name of the department added
-                console.log(`${answers.department} added to database\n`);
-                // runs the initialPrompt function
-                initialPrompt();
-            })
+            // displays the response to the user as a table
+            console.table(res);
+            // displays the name of the department added
+            console.log(`${answers.department} added to database\n`);
+            // runs the initialPrompt function
+            initialPrompt();
         })
-    }
+    })
+}
+
+// function to remove a department
+function removeDepartment() {
+    // message to user \n provides a line break
+    console.log('Removing Department\n');
+    // SQL query to select all departments
+    const query = `SELECT * FROM departments
+        `;
+    // grabs the response from the query and runs it through the console.table function
+    db.query(query, function (err, res) {
+        // if there is an error, throw it
+        if (err) {
+            throw err;
+        }
+        // returns the response to the console.table function and .map will return an array of objects based on the data in the query
+        const departments = res.map(departments => {
+            return {
+                // SQL departments constructor (dep_name)
+                name: departments.dep_name,
+                value: departments.id
+            }
+        })
+        // displays the departments to the user as a table
+        console.table(res);
+        // displays to the user the available departments to add.
+        console.log('Departments Available\n');
+        // runs the promptAdd function below
+        promptRemoveDepartment(departments);
+    })
+}
+
+// function for prompting choices to remove department by id
+function promptRemoveDepartment(departments) {
+    //  prompts user based on SQL departments table constructor/columns using the departments table as a reference
+    inquirer.prompt([{
+        type: 'list',
+        name: 'departmentId',
+        message: "What is the department you would like to remove?",
+        choices: departments
+    }]).then(function (answers) {
+        // displays the answers to the user in the console
+        console.table(answers);
+        // SQL query to remove the department based on the user's answers
+        const query = `DELETE FROM departments WHERE id = ?`;
+        // grabs the response from the query and runs it through to the console.table function
+        db.query(query, [answers.departmentId], function (err, res) { // departments constructor (dep_name)
+            // if there is an error, throw it
+            if (err) {
+                throw err;
+            }
+            // displays the response to the user as a table
+            console.table(res);
+            // displays the name of the department removed
+            console.log(`${answers.departmentId} removed from database\n`);
+            // runs the initialPrompt function
+            initialPrompt();
+        })
+    })
+}
+
+// function to remove a role
+function removeARole() {
+    // message to user \n provides a line break
+    console.log('Removing Role\n');
+    // SQL query to select all roles
+    const query = `SELECT * FROM roles
+        `;
+    // grabs the response from the query and runs it through the console.table function
+    db.query(query, function (err, res) {
+        // if there is an error, throw it
+        if (err) {
+            throw err;
+        }
+        // returns the response to the console.table function and .map will return an array of objects based on the data in the query
+        const roles = res.map(roles => {
+            return {
+                // SQL roles constructor (title, salary, department_id)
+                name: roles.title,
+                value: roles.id
+            }
+        })
+        // displays the roles to the user as a table
+        console.table(res);
+        // displays to the user the available roles to add.
+        console.log('Roles Available\n');
+        // runs the promptAdd function below
+        promptRemoveRole(roles);
+    })
+}
+
+// function for prompting choices to remove role department_id
+function promptRemoveRole(roles) {
+    //  prompts user based on SQL roles table constructor/columns using the roles table as a reference
+    inquirer.prompt([{
+        type: 'list',
+        name: 'roleId',
+        message: "What is the role you would like to remove?",
+        choices: roles
+    }]).then(function (answers) {
+        // displays the answers to the user in the console
+        console.table(answers);
+        // SQL query to remove the role based on the user's answers
+        const query = `DELETE FROM roles WHERE id = ?`;
+        // grabs the response from the query and runs it through to the console.table function
+        db.query(query, [answers.roleId], function (err, res) { // roles constructor (title, salary, department_id)
+            // if there is an error, throw it
+            if (err) {
+                throw err;
+            }
+            // displays the response to the user as a table
+            console.table(res);
+            // displays the name of the role removed
+            console.log(`${answers.roleId} removed from database\n`);
+            // runs the initialPrompt function
+            initialPrompt();
+        })
+    })
+}
+
 
 initialPrompt();
