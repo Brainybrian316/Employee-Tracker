@@ -46,6 +46,11 @@ function initialPrompt() {
                 addRole();
                 break;
 
+                case "End":
+                db.end();
+                console.log("\nGoodbye!");
+                break;
+                
         }
     });
 };
@@ -288,54 +293,53 @@ function addRole() {
     db.query(query, function (err, res) {
         if (err) { throw err; }
 
-        const departmentChoices = res.map(department => {
+        const departments = res.map(department => {
             return {
                 name: department.dep_name,
                 value: department.id
             }
-        })
-
-        console.table(res);
-        console.log('Departments Available\n');
-
-        promptAddRole(departmentChoices);
-    });
+        }
+    )
+    console.table(res);
+    console.log('Departments Available\n');
+    
+    promptAddRole(departments);
+    })
 }
 
 // function for prompting choices to add role
-function promptAddRole(departmentChoices) {
+function promptAddRole(departments) {
     inquirer.prompt([
         {
             type: 'input',
-            name: 'roleTitle',
+            name: 'title',
             message: "What is the role's title?"
         },
         {
             type: 'input',
-            name: 'roleSalary',
-            message: "What will be the salary for this role? (Enter as a decimal EX: 100000.00)"
+            name: 'salary',
+            message: "What is the role's salary?"
         },
         {
             type: 'list',
             name: 'departmentId',
-            message: "What department will this role be assigned to?",
+            message: "What is the role's department?",
             choices: departments
         }
     ])
-    .then(function (answer) {
-        console.table(answer);
+    .then(function(answers) {
+        console.table(answers);
 
         const query = `INSERT INTO roles (title, salary, department_id) VALUES (?, ?, ?)`;
-
-        db.query(query, [answer.roleTitle, answer.roleSalary, answer.departmentId], function (err, res) {
+        db.query(query, [answers.title, answers.salary, answers.departmentId], function (err, res) {
             if (err) { throw err; }
 
             console.table(res);
-            console.log(`${answer.roleTitle} added to database\n`);
+            console.log(`${answers.title} added to database\n`);
 
-            initialPrompt();
-        });
-    });
-};
+            initialPrompt(); 
+        })
+    })
+}
 
-initialPrompt()
+initialPrompt();
